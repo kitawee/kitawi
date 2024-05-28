@@ -1,4 +1,4 @@
-import 'package:atomix/views.dart';
+import 'package:views/views.dart';
 
 class Event {
   final String? value;

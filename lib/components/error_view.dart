@@ -1,4 +1,4 @@
-import 'package:atomix/views.dart';
+import 'package:views/views.dart';
 
 View errorView(Object error, StackTrace? stackTrace) {
   return Reactive(
