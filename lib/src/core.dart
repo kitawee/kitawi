@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:views/components/error_view.dart';
-import 'package:views/views.dart';
+import 'package:view/components/error_view.dart';
+import 'package:view/view.dart';
 import 'package:web/web.dart';
 
 bool DEBUG = false;

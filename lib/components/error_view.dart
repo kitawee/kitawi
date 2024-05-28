@@ -1,4 +1,4 @@
-import 'package:views/views.dart';
+import 'package:view/view.dart';
 
 View errorView(Object error, StackTrace? stackTrace) {
   return Reactive(

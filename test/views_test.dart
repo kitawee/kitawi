@@ -1,4 +1,4 @@
-import 'package:views/views.dart';
+import 'package:view/view.dart';
 import 'package:test/test.dart';
 import 'package:web/web.dart' as web;
 

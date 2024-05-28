@@ -1,8 +1,10 @@
-# Views
+# View
 
-Views is a Dart web library for building web user interfaces. It is inspired by React and Flutter, and it is designed to be simple, fast, and easy to use.
+View is a Dart web library for building web user interfaces. It is inspired by React and Flutter, and it is designed to be simple, fast, and easy to use.
 
 It's highly customizable and can be used with any Dart package that can run on the web.
+
+The renderer compiles to wasm for all browsers except Safari, which uses the dart2js compiler.
 
 ## Installation
 
@@ -10,16 +12,16 @@ Add the following to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  views:
+  view:
     git:
-      url: https://github.com/bryanbill/Views.git
+      url: https://github.com/bryanbill/view.git
       ref: master
 ```
 
 ## Usage
 
 ```dart
-import 'package:views/views.dart';
+import 'package:view/view.dart';
 
 void main() => Router.run(
     routes: [
@@ -31,10 +33,74 @@ void main() => Router.run(
 )
 ```
 
+## Running the project
+
+To run the project, you need to have the Dart SDK installed on your machine.
+
+```bash
+# Enable webdev
+dart pub global activate webdev
+
+# Run the project in Dev mode
+webdev serve --auto refresh
+
+# Compile the project for production
+
+# Compile to wasm
+dart compile wasm web/main.dart -o site/main.wasm
+
+# Compile to js as a fallback for Safari
+dart2js -m -o site/main.js web/ios.fb.js
+
+# Copy your assets and statics to the site folder
+cp web/index.html web/styles.css site/ && cp -r web/assets site/
+```
+
+Create a file `site/main.dart.js` and add the following code:
+
+```js
+(async function () {
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    const isSafari = navigator.vendor && navigator.vendor.indexOf('Apple') > -1;
+    if (isIOS || isSafari) {
+        runDartJs();
+        return;
+    }
+
+    let dart2wasm_runtime;
+    let moduleInstance;
+    try {
+        const dartModulePromise = WebAssembly.compileStreaming(fetch('main.wasm'));
+        const imports = {};
+        dart2wasm_runtime = await import('./main.mjs');
+        moduleInstance = await dart2wasm_runtime.instantiate(dartModulePromise, imports);
+    } catch (exception) {
+        console.error(`Failed to fetch and instantiate wasm module: ${exception}`);
+        console.error('See https://dart.dev/web/wasm for more information.');
+    }
+
+    if (moduleInstance) {
+        try {
+            await dart2wasm_runtime.invoke(moduleInstance);
+        } catch (exception) {
+            console.error(`Exception while invoking test: ${exception}`);
+        }
+    }
+})();
+
+function runDartJs() {
+    import('./ios.fb.js').then(module => {
+        console.log('Running Dart code in JavaScript on iOS');
+    });
+}
+```
+
+This code will check if the browser is Safari or iOS and run the Dart code in JavaScript.
+
 ## Components
 
-Views is made to be simple and easy to use. It has a few basic components that you can use to build your web app.
-We have provided basic web elements - Views, out of the box that you can use to build your web app.
+View is made to be simple and easy to use. It has a few basic components that you can use to build your web app.
+We have provided basic web elements - view, out of the box that you can use to build your web app.
 
 You can also create your own components by extending the `View` class.
 
@@ -57,7 +123,7 @@ class MyComponent extends View {
 
 ## Router
 
-Views comes with a simple router that you can use to navigate between different views in your web app.
+view comes with a simple router that you can use to navigate between different view in your web app.
 
 ```dart
 void main() => Router.run(
@@ -70,7 +136,7 @@ void main() => Router.run(
 )
 ```
 
-`param` is a map of query parameters that you can use to pass data between views.
+`param` is a map of query parameters that you can use to pass data between view.
 
 Example:
 A path like `/user/:id` will have a `param` map with a key of `id`.
@@ -90,7 +156,7 @@ void main() => Router.run(
 
 ## Window
 
-Views provide a simple wrapper around the `window` object that you can use to access the browser's window object.
+view provide a simple wrapper around the `window` object that you can use to access the browser's window object.
 Currently, it only provides support for Local Storage.
 
 ```dart
@@ -98,12 +164,12 @@ LocalStorage.setItem('key', 'value');
 LocalStorage.getItem('key');
 ```
 
-And that's it! You're ready to start building your web app with Views.
+And that's it! You're ready to start building your web app with view.
 
 ## Contributing
 
-We welcome contributions to Views
+We welcome contributions to view
 
 ## License
 
-Views is licensed under the MIT License.
+view is licensed under the MIT License.

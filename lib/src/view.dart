@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:views/utils/device.dart';
-import 'package:views/views.dart';
+import 'package:view/utils/device.dart';
+import 'package:view/view.dart';
 import 'package:web/web.dart';
 import 'dart:js_interop' as js;
 import 'event.dart' as event;

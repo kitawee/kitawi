@@ -1,7 +1,7 @@
-name: views
+name: view
 description: An elegant, simple and fast web framework.
 version: 0.1.1+dev
-repository: https://github.com/bryanbill/views
+repository: https://github.com/bryanbill/view
 
 environment:
   sdk: ^3.4.1
