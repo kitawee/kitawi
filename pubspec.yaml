@@ -1,5 +1,5 @@
 name: view
-description: An elegant, simple and fast web framework.
+description: View is a Dart web library for building web user interfaces
 version: 0.1.1+dev
 repository: https://github.com/bryanbill/view
 
