@@ -30,7 +30,7 @@ View todoList() {
 
           // Add a new todo
           Div(
-            className: "w-full flex justify-center",
+            className: "w-full flex flex-col justify-center items-center",
             children: [
               Div(
                 className: "w-full md:w-2/3 lg:w-1/2 flex justify-center mt-4 ",
@@ -59,6 +59,10 @@ View todoList() {
                   ),
                 ],
               ),
+              Text(
+                "Note: Press Enter to add a new todo!",
+                className: "text-sm my-2",
+              )
             ],
           ),
 
