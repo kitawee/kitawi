@@ -114,7 +114,7 @@ class Router {
       if (matchRoute == null) {
         final errorString = "Route not found\n${pathSettings.path} not found";
         final StackTrace stackTrace = StackTrace.current;
-        showErrorView(errorString, stackTrace);
+        showErrorView(errorString, stackTrace: stackTrace);
         return;
       }
 
@@ -122,7 +122,7 @@ class Router {
       if (element == null) {
         final errorString = "Your target element `$selector` was not found";
         final StackTrace stackTrace = StackTrace.current;
-        showErrorView(errorString, stackTrace);
+        showErrorView(errorString, stackTrace: stackTrace);
         return;
       }
 
@@ -176,7 +176,7 @@ Future<void> inject(String path, [String? type = "js"]) async {
   document.head?.append(view.render());
 }
 
-void showErrorView(String errorString, StackTrace stackTrace) {
+void showErrorView(String errorString, {StackTrace? stackTrace}) {
   if (!DEBUG) return;
   document.getElementsByTagName('body').item(0)?.append(
         errorView(errorString, stackTrace).render(),

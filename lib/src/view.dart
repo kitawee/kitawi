@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:view/utils/device.dart';
 import 'package:view/view.dart';
 import 'package:web/web.dart';
 import 'dart:js_interop' as js;
@@ -1001,7 +1000,7 @@ class Video extends View {
     if (src == null && sources == null) {
       showErrorView(
           "$tag must have either src or valid sources; None currently provided",
-          StackTrace.current);
+          stackTrace: StackTrace.current);
       throw Exception('src or sources must be provided');
     }
   }
@@ -1119,7 +1118,7 @@ class Audio extends View {
     if (src == null && sources == null) {
       showErrorView(
           "$tag must have either src or valid sources; None currently provided",
-          StackTrace.current);
+          stackTrace: StackTrace.current);
       throw Exception('src or sources must be provided');
     }
   }
@@ -1250,13 +1249,13 @@ class Svg extends View {
   }) {
     if (preserveAspectRatio != null && mode == null) {
       showErrorView("mode is required when preserveAspectRatio is set",
-          StackTrace.current);
+          stackTrace: StackTrace.current);
       throw Exception('mode is required when preserveAspectRatio is set');
     }
 
     if (preserveAspectRatio == null && mode != null) {
       showErrorView("preserveAspectRatio is required when mode is set",
-          StackTrace.current);
+          stackTrace: StackTrace.current);
       throw Exception('preserveAspectRatio is required when mode is set');
     }
   }
