@@ -6,7 +6,7 @@ void main() => Router.run(
       routes: [
         Route(
           path: '/',
-          view: (p) => Text("Hello World"),
+          view: (p) => Text("Home"),
         ),
         Route(
           path: '/:name',

@@ -1,17 +1,15 @@
-name: view_example
-description: An example of how to use the view library.
+name: todo
+description: An absolute bare-bones web app.
 version: 1.0.0
 # repository: https://github.com/my_org/my_repo
-publish_to: none
 
 environment:
   sdk: ^3.4.1
 
 # Add regular dependencies here.
 dependencies:
-  view:
+  view: 
     path: ../../
-  http: any
 
 dev_dependencies:
   build_runner: ^2.4.8

@@ -10,7 +10,7 @@ class SearchParams {
   SearchParams();
 
   /// The query string part of the URL
-  String? get(String key) {
+  static String? get(String key) {
     final value = window.location.hash.split('?').last.split('&').firstWhere(
           (element) => element.startsWith('$key='),
           orElse: () => '',
@@ -20,7 +20,7 @@ class SearchParams {
   }
 
   /// All the query string parameters
-  Map<String, String> get all {
+  static Map<String, String> get all {
     final params = window.location.hash.split('?').last.split('&');
     final map = <String, String>{};
     for (final param in params) {
@@ -32,7 +32,7 @@ class SearchParams {
   }
 
   /// Set a query string parameter
-  void set(String key, String value) {
+  static void set(String key, String value) {
     final params = window.location.hash.split('?');
     final query = params.length > 1 ? params.last : '';
     final newQuery = query.isEmpty ? '$key=$value' : '$query&$key=$value';

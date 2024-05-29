@@ -491,15 +491,15 @@ class Reactive extends View {
     final newElement = render();
     final oldElement = document.getElementById(id!);
     if (oldElement != null) {
-      if (!isIOS || !isSafari) {
-        oldElement.replaceWith(newElement);
+      // if (!isIOS || !isSafari) {
+      //   oldElement.replaceWith(newElement);
 
-        if (onUpdated != null) {
-          final updateEvent = event.Event(target: this);
-          onUpdated(updateEvent);
-        }
-        return;
-      }
+      //   if (onUpdated != null) {
+      //     final updateEvent = event.Event(target: this);
+      //     onUpdated(updateEvent);
+      //   }
+      //   return;
+      // }
 
       // This method works for ios platform, dont replace it with innerHTML or replaceChild
       for (var i = 0; i < newElement.children.length; i++) {
