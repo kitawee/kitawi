@@ -2,6 +2,7 @@ import 'package:view/view.dart';
 
 void main() => Router.run(
       initialRoute: '/',
+      debugMode: true,
       routes: [
         Route(
           path: '/',
@@ -40,6 +41,7 @@ View todoList() {
                     placeholder: "Add a new todo",
                     className: "w-1/2 p-2 border border-gray-300 rounded",
                     onSubmitted: (p0) {
+                      if (newTodo.isEmpty) return;
                       todos.add(newTodo);
                       newTodo = "";
                       update();
@@ -49,6 +51,7 @@ View todoList() {
                     child: Text("Add"),
                     className: "ml-2 p-2 bg-blue-500 text-white rounded",
                     onPressed: (p0) {
+                      if (newTodo.isEmpty) return;
                       todos.add(newTodo);
                       newTodo = "";
                       update();
