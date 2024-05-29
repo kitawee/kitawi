@@ -4,9 +4,15 @@ View is a Dart web library for building web user interfaces. It is inspired by R
 
 It's highly customizable and can be used with any Dart package that can run on the web.
 
-The renderer compiles to wasm for all browsers except Safari, which uses the dart2js compiler.
+The project can be compiled to wasm for Chromium based browsers, others use the dart2js compiler. See Issue [Wasm-GC WebAssembly Garbage Collection Proposal](https://bugs.webkit.org/show_bug.cgi?id=247394)
 
 ## Installation
+
+Create a new Dart web project using the following command:
+
+```bash
+dart create -t web my_project
+```
 
 Add the following to your `pubspec.yaml`:
 
@@ -35,7 +41,9 @@ void main() => Router.run(
 
 ## Running the project
 
-To run the project, you need to have the Dart SDK installed on your machine.
+To run the project, you need to have enabled the `webdev` package.
+
+You can do this by running the following command:
 
 ```bash
 # Enable webdev
