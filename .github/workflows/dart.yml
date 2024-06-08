@@ -32,6 +32,7 @@ jobs:
         run: mkdir build
 
       - name: Increment Version
+        id: increment_version
         if: matrix.os == 'ubuntu-latest' # Only run this step once on ubuntu-latest
         run: |
           VERSION=$(cat VERSION)
@@ -44,7 +45,7 @@ jobs:
           git config pull.rebase false
           git pull --rebase
           git push 
-          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV  # Export to the environment for all jobs
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
 
       - name: Build for ${{ matrix.os }}
         run: dart compile exe bin/view.dart -o build/view-${{ matrix.os }}
@@ -54,35 +55,35 @@ jobs:
         with:
           name: view-${{ matrix.os }}
           path: build/view-${{ matrix.os }}
-
+      
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: view-${{ matrix.os }}  
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ env.NEW_VERSION }}
-          release_name: Release ${{ env.NEW_VERSION }}
+          tag_name: ${{ needs.build.outputs.new_version }}  
+          release_name: Release ${{ needs.build.outputs.new_version }}
           body: |
             The following executable assets are included in this release:
               - Windows
               - Linux
               - macOS
 
-      - name: Get the upload URL for the release asset
-        id: upload
-        run: echo "UPLOAD_URL=UPLOAD_URL" >> $GITHUB_ENV
-
-  release:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Upload Release Asset - Windows
+      - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ env.UPLOAD_URL }}
-          asset_path: ./build/view-windows-latest.exe
-          asset_name: view-windows.exe
-          asset_content_type: application/octet-stream
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./view-${{ matrix.os }}
+          asset_name: view-${{ matrix.os }}.exe
+          asset_content_type: application/octet-stream 
