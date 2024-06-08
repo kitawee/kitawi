@@ -103,7 +103,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ needs.versioning.outputs.new_version }}
+          tag_name: ${{ needs.versioning.outputs.new_version }}-${{ matrix.os }}
           release_name: Release ${{ needs.versioning.outputs.new_version }}
           body: |
             The following executable assets are included in this release:
