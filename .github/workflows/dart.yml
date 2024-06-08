@@ -55,22 +55,33 @@ jobs:
         with:
           name: view-${{ matrix.os }}
           path: build/view-${{ matrix.os }}
-      
+
   release:
     needs: build
     runs-on: ubuntu-latest
+    strategy: # Add strategy for the release job
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        include: # Map OS to asset names
+          - os: ubuntu-latest
+            asset_name: view-linux
+          - os: windows-latest
+            asset_name: view-windows.exe
+          - os: macos-latest
+            asset_name: view-macos
+
     steps:
       - name: Download Artifacts
         uses: actions/download-artifact@v3
         with:
-          name: view-${{ matrix.os }}  
+          name: view-${{ matrix.os }}
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ needs.build.outputs.new_version }}  
+          tag_name: ${{ needs.build.outputs.new_version }}
           release_name: Release ${{ needs.build.outputs.new_version }}
           body: |
             The following executable assets are included in this release:
@@ -85,5 +96,5 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./view-${{ matrix.os }}
-          asset_name: view-${{ matrix.os }}.exe
-          asset_content_type: application/octet-stream 
+          asset_name: ${{ matrix.asset_name}}
+          asset_content_type: application/octet-stream
