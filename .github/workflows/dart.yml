@@ -82,12 +82,16 @@ jobs:
           echo $NEW_VERSION > VERSION
           git config user.name ${{ github.actor }}
           git config user.email ${{ github.actor }}@users.noreply.github.com
-          
-          git fetch
-          git reset --hard origin/master 
-          git add VERSION
-          git commit -m "Bump version to $NEW_VERSION"
-          git push origin HEAD:master  # Force push to master
+
+          if ! git diff-index --quiet HEAD --; then
+            git config user.name ${{ github.actor }}
+            git config user.email ${{ github.actor }}@users.noreply.github.com
+            git add VERSION
+            git commit -m "Bump version to $NEW_VERSION"
+            git push 
+          else
+            echo "Version unchanged, no need to commit."
+          fi
 
           echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
 
