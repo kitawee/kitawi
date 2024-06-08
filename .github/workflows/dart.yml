@@ -55,19 +55,6 @@ jobs:
           name: view-${{ matrix.os }}
           path: build/view-${{ matrix.os }}
 
-  release:
-    needs: build # Ensure release job runs after build job is completed
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        asset_name: [view-linux, view-windows.exe, view-macos]
-        asset_path:
-          [view-ubuntu-latest, view-windows-latest.exe, view-macos-latest]
-    steps:
-      - name: Download Artifacts
-        uses: actions/download-artifact@v3
-
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -77,15 +64,25 @@ jobs:
           tag_name: ${{ env.NEW_VERSION }}
           release_name: Release ${{ env.NEW_VERSION }}
           body: |
-            This release includes executable assets for Windows, Linux, and macOS.
+            The following executable assets are included in this release:
+              - Windows
+              - Linux
+              - macOS
 
-      - name: Upload Release Assets
+      - name: Get the upload URL for the release asset
+        id: upload
+        run: echo "UPLOAD_URL=UPLOAD_URL" >> $GITHUB_ENV
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Upload Release Asset - Windows
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./${{ matrix.asset_path }}
-          asset_name: ${{ matrix.asset_name }}
+          upload_url: ${{ env.UPLOAD_URL }}
+          asset_path: ./build/view-windows-latest.exe
+          asset_name: view-windows.exe
           asset_content_type: application/octet-stream
