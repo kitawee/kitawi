@@ -32,39 +32,40 @@ jobs:
       - name: Create build directory
         run: mkdir build
 
-      - name: Increment Version
-        run: |
-          VERSION=$(cat VERSION)
-          NEW_VERSION=$(echo $VERSION | awk -F. '{print $1 "." $2 "." ($3+1)}') # Increment patch version
-          echo $NEW_VERSION > VERSION
-          git config user.name ${{ github.actor }}
-          git config user.email ${{ github.actor }}@users.noreply.github.com
-          git add VERSION
-          git commit -m "Bump version to $NEW_VERSION"
-          git push -u origin HEAD
-
-      - name: $NEW_VERSION build for ${{ matrix.os }}
-        run: dart compile exe bin/view.dart -o build/view-$NEW_VERSION-${{ matrix.os }}
-
-      - name: Archive Production Artifacts
-        uses: actions/upload-artifact@v3
+      - name: Bump version
+        id: bump_version
+        uses: phips28/gh-action-bump-version@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: view-$NEW_VERSION-${{ matrix.os }}
-          path: build/view-$NEW_VERSION-${{ matrix.os }}
+          minor-wording: "add,feat,ft,new"
+          patch-wording: "fix,bug,hotfix"
+          tag-prefix: "v"
+          rc-wording: "rc, release,alpha,beta"
+          major-wording: "breaking,major"
 
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: $NEW_VERSION
-          release_name: Release $NEW_VERSION
+          tag_name: ${{ steps.bump_version.outputs.newTag }}
+          release_name: Release ${{ steps.bump_version.outputs.newTag }}
           body: |
             The following executable assets are included in this release:
               - Windows
               - Linux
               - macOS
+
+      - name: ${{ steps.bump_version.outputs.newTag }} build for ${{ matrix.os }}
+        run: dart compile exe bin/view.dart -o build/view-${{ steps.bump_version.outputs.newTag }}-${{ matrix.os }}
+
+      - name: Archive Production Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: view-${{ steps.bump_version.outputs.newTag }}-${{ matrix.os }}
+          path: build/view-${{ steps.bump_version.outputs.newTag }}-${{ matrix.os }}
 
       - name: Upload Release Asset - Windows
         uses: actions/upload-release-asset@v1
@@ -72,9 +73,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./build/view-$NEW_VERSION-windows-latest.exe
-          asset_name: view-$NEW_VERSION-windows.exe
-          asset_content_type: application/octet-stream 
+          asset_path: ./build/view-${{ steps.bump_version.outputs.newTag }}-windows-latest.exe
+          asset_name: view-${{ steps.bump_version.outputs.newTag }}-windows.exe
+          asset_content_type: application/octet-stream
 
       - name: Upload Release Asset - Linux
         uses: actions/upload-release-asset@v1
@@ -82,8 +83,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./build/view-$NEW_VERSION-ubuntu-latest
-          asset_name: view-$NEW_VERSION-linux
+          asset_path: ./build/view-${{ steps.bump_version.outputs.newTag }}-ubuntu-latest
+          asset_name: view-${{ steps.bump_version.outputs.newTag }}-linux
           asset_content_type: application/octet-stream
 
       - name: Upload Release Asset - macOS
@@ -92,6 +93,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./build/view-$NEW_VERSION-macos-latest
-          asset_name: view-$NEW_VERSION-macos
+          asset_path: ./build/view-${{ steps.bump_version.outputs.newTag }}-macos-latest
+          asset_name: view-${{ steps.bump_version.outputs.newTag }}-macos
           asset_content_type: application/octet-stream
