@@ -29,9 +29,11 @@ jobs:
       - name: Run tests on Chrome (Dart2JS)
         run: dart test -p chrome --compiler dart2js
 
+      - name: Create build directory
+        run: mkdir build
+
       - name: Build for ${{ matrix.os }}
-        run: |
-          dart compile exe bin/view.dart -o build/view-${{ matrix.os }}
+        run: dart compile exe bin/view.dart -o build/view-${{ matrix.os }}
 
       - name: Archive Production Artifacts
         uses: actions/upload-artifact@v3
