@@ -86,7 +86,7 @@ jobs:
           git commit -m "Bump version to $NEW_VERSION"
           git pull --rebase
           git add VERSION
-          git rebase --continue
+          git commit --amend --no-edit
           git push 
           echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT # Set output variable
 
