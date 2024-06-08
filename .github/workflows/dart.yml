@@ -32,11 +32,66 @@ jobs:
       - name: Create build directory
         run: mkdir build
 
-      - name: Build for ${{ matrix.os }}
-        run: dart compile exe bin/view.dart -o build/view-${{ matrix.os }}
+      - name: Increment Version
+        run: |
+          VERSION=$(cat VERSION)
+          NEW_VERSION=$(echo $VERSION | awk -F. '{print $1 "." $2 "." ($3+1)}') # Increment patch version
+          echo $NEW_VERSION > VERSION
+          git config user.name ${{ github.actor }}
+          git config user.email ${{ github.actor }}@users.noreply.github.com
+          git add VERSION
+          git commit -m "Bump version to $NEW_VERSION"
+          git push
+
+      - name: $NEW_VERSION build for ${{ matrix.os }}
+        run: dart compile exe bin/view.dart -o build/view-$NEW_VERSION-${{ matrix.os }}
 
       - name: Archive Production Artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: view-${{ matrix.os }}
-          path: build/view-${{ matrix.os }}
+          name: view-$NEW_VERSION-${{ matrix.os }}
+          path: build/view-$NEW_VERSION-${{ matrix.os }}
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+        with:
+          tag_name: $NEW_VERSION
+          release_name: Release $NEW_VERSION
+          body: |
+            The following executable assets are included in this release:
+              - Windows
+              - Linux
+              - macOS
+
+      - name: Upload Release Asset - Windows
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./build/view-$NEW_VERSION-windows-latest.exe
+          asset_name: view-$NEW_VERSION-windows.exe
+          asset_content_type: application/octet-stream 
+          
+      - name: Upload Release Asset - Linux
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./build/view-$NEW_VERSION-ubuntu-latest
+          asset_name: view-$NEW_VERSION-linux
+          asset_content_type: application/octet-stream
+
+      - name: Upload Release Asset - macOS
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./build/view-$NEW_VERSION-macos-latest
+          asset_name: view-$NEW_VERSION-macos
+          asset_content_type: application/octet-stream
