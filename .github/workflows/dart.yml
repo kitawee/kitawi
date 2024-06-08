@@ -88,6 +88,8 @@ jobs:
             git config user.email ${{ github.actor }}@users.noreply.github.com
             git add VERSION
             git commit -m "Bump version to $NEW_VERSION"
+            git config pull.rebase false
+            git pull
             git push 
           else
             echo "Version unchanged, no need to commit."
