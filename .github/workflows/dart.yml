@@ -41,7 +41,7 @@ jobs:
           git config user.email ${{ github.actor }}@users.noreply.github.com
           git add VERSION
           git commit -m "Bump version to $NEW_VERSION"
-          git push
+          git push -u origin HEAD
 
       - name: $NEW_VERSION build for ${{ matrix.os }}
         run: dart compile exe bin/view.dart -o build/view-$NEW_VERSION-${{ matrix.os }}
@@ -75,7 +75,7 @@ jobs:
           asset_path: ./build/view-$NEW_VERSION-windows-latest.exe
           asset_name: view-$NEW_VERSION-windows.exe
           asset_content_type: application/octet-stream 
-          
+
       - name: Upload Release Asset - Linux
         uses: actions/upload-release-asset@v1
         env:
