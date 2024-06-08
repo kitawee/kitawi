@@ -82,13 +82,14 @@ jobs:
           echo $NEW_VERSION > VERSION
           git config user.name ${{ github.actor }}
           git config user.email ${{ github.actor }}@users.noreply.github.com
+          
+          git fetch
+          git reset --hard origin/master 
           git add VERSION
           git commit -m "Bump version to $NEW_VERSION"
-          git pull --rebase
-          git add VERSION
-          git commit --amend --no-edit
-          git push 
-          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT # Set output variable
+          git push origin HEAD:master  # Force push to master
+
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
 
       - name: Build for ${{ matrix.os }}
         run: dart compile exe bin/view.dart -o build/view-${{ matrix.os }}
