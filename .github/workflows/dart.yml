@@ -79,7 +79,7 @@ jobs:
           path: build/view-${{ matrix.os }}
 
   release:
-    needs: build
+    needs: [versioning, build]
     runs-on: ubuntu-latest
     strategy: # Add strategy for the release job
       matrix:
