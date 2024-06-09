@@ -77,7 +77,7 @@ jobs:
         run: mkdir build
 
       - name: Build for ${{ matrix.os }}
-        run: dart compile exe bin/view.dart -o build/view-${{ matrix.os }}
+        run: dart compile exe bin/vw.dart -o build/view-${{ matrix.os }}
 
       - name: Archive Production Artifacts
         uses: actions/upload-artifact@v3
