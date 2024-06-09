@@ -55,7 +55,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, windows-latest, macos-latest, macos-latest-large]
         dart-version: [stable]
     steps:
       - uses: actions/checkout@v4
@@ -89,14 +89,20 @@ jobs:
     runs-on: ubuntu-latest
     strategy: # Add strategy for the release job
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, windows-latest, macos-latest, macos-latest-large]
         include: # Map OS to asset names
           - os: ubuntu-latest
+            asset_title: Linux
             asset_name: view-linux
           - os: windows-latest
+            asset_title: Windows
             asset_name: view-windows.exe
           - os: macos-latest
+            asset_title: macOS
             asset_name: view-macos
+          - os: macos-latest-large
+            asset_title: macOS Apple Silicon
+            asset_name: view-macos-apple-silicon
 
     steps:
       - name: Download Artifacts
@@ -110,7 +116,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ needs.versioning.outputs.new_version }}-${{ matrix.os }}
-          release_name: Release ${{ needs.versioning.outputs.new_version }} for ${{ matrix.os }}
+          release_name: Release ${{ needs.versioning.outputs.new_version }} for ${{ matrix.asset_title }}
           body: |
             A ${{ matrix.os }} executable file is attached.
 
