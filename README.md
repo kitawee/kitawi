@@ -1,6 +1,6 @@
 # View - A Dart Web Library
 
-![View](https://img.shields.io/badge/View-0.2.3-teal)
+![View](https://img.shields.io/badge/View-0.3.1-teal)
 
 View is a Dart web library for building web user interfaces. It is inspired by React and Flutter, and it is designed to be simple, fast, and easy to use.
 
