@@ -8,7 +8,7 @@ on:
 
 jobs:
   versioning:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest-large
     outputs:
       new_version: ${{ steps.increment_version.outputs.new_version }}
     steps:
@@ -43,6 +43,7 @@ jobs:
           git config user.name ${{ github.actor }}
           git config user.email ${{ github.actor }}@users.noreply.github.com
 
+
           git add VERSION
           git commit -m "Bump version to $NEW_VERSION"
           git config pull.rebase false
@@ -52,7 +53,7 @@ jobs:
 
   build:
     needs: versioning
-    runs-on: ubuntu-latest
+    runs-on: macos-latest-large
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest, macos-latest-large]
@@ -86,7 +87,7 @@ jobs:
 
   release:
     needs: [versioning, build]
-    runs-on: ubuntu-latest
+    runs-on: macos-latest-large
     strategy: # Add strategy for the release job
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest, macos-latest-large]
