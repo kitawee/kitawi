@@ -1,4 +1,6 @@
-# View
+# View - A Dart Web Library
+
+![View](https://img.shields.io/badge/View-0.2.3-teal)
 
 View is a Dart web library for building web user interfaces. It is inspired by React and Flutter, and it is designed to be simple, fast, and easy to use.
 
@@ -8,6 +10,55 @@ The project can be compiled to wasm for Chromium based browsers, others use the 
 
 ## Installation
 
+1. Using the View CLI:
+
+```bash
+dart pub global activate --source git https://github.com/bryanbill/view.git
+```
+
+The run the following command to create a new project:
+
+```bash
+vw new my_project
+```
+
+Get the dependencies:
+
+```bash
+cd my_project
+vw get
+```
+
+Add dependencies:
+
+```bash
+vw get http
+```
+
+Run the project:
+
+```bash
+vw run
+```
+
+Build the project:
+
+```bash
+vw build
+# or
+vw build -o dist
+```
+
+2. As a dependency in your `pubspec.yaml` file:
+
+```yaml
+dependencies:
+  view:
+    git:
+      url: https://github.com/bryanbill/view.git
+```
+
+With this method, you have to handle the build process yourself.
 
 ## Contributing
 

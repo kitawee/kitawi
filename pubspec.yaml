@@ -5,6 +5,8 @@ repository: https://github.com/bryanbill/view
 
 environment:
   sdk: ^3.4.1
+executables:
+  vw:
 
 dependencies:
   web: 0.5.1

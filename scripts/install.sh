@@ -51,14 +51,14 @@ echo "view installed successfully. Version: $VERSION"
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     echo "Adding view to PATH..."
     echo "export PATH=\$PATH:/usr/local/bin" >> ~/.bashrc
-    source ~/.bashrc
+    echo "Please restart your terminal or run 'source ~/.bashrc' to use the 'vw' command."
 fi
 
 # Add view to PATH using zshrc for macos
 if [[ "$OSTYPE" == "darwin"* ]]; then
     echo "Adding view to PATH..."
     echo "export PATH=\$PATH:/usr/local/bin" >> ~/.zshrc
-    source ~/.zshrc
+    echo "Please restart your terminal or run 'source ~/.zshrc' to use the 'vw' command."
 fi
 
 
