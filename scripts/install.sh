@@ -1,37 +1,65 @@
 #!/bin/bash
 
-assetName="view" # Replace with the correct artifact name from your GitHub Actions workflow
+# GitHub repository details
+REPO="bryanbill/view"
+API_URL="https://api.github.com/repos/$REPO/releases/latest"
 
-# Construct API URL
-apiURL="https://api.github.com/repos/bryanbill/view/releases/latest"
-
-# Fetch release information
-releaseInfo=$(curl -s "$apiURL")
-
-# Check for errors fetching release information
-if [[ $? -ne 0 ]]; then
-    echo "Error fetching release information. Please check your repository details and try again."
+# Determine platform
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    PLATFORM="macos"
+elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    PLATFORM="linux"
+else
+    echo "Unsupported platform: $OSTYPE"
     exit 1
 fi
 
-# Extract download URL for the specified asset
-downloadURL=$(echo "$releaseInfo" | grep -Eo "\"browser_download_url\":.*\"$assetName\"" | cut -d '"' -f 4)
-
-# Check for errors extracting download URL
-if [[ -z "$downloadURL" ]]; then
-    echo "Error finding download URL for the specified asset. Please check the asset name and try again."
-    exit 1
+# Check if jq is installed
+if ! command -v jq &> /dev/null; then
+    echo "jq is required but not installed. Installing jq..."
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        brew install jq
+    elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+        sudo apt-get update
+        sudo apt-get install -y jq
+    fi
 fi
 
-# Download and save executable
-downloadPath="$HOME/your-app"
-mkdir -p "$downloadPath"
-exePath="$downloadPath/$assetName"  # Use the actual asset name in the file path
-curl -L "$downloadURL" -o "$exePath"
-chmod +x "$exePath"
+# Fetch the latest release info
+echo "Fetching latest release info..."
+RELEASE_INFO=$(curl -s $API_URL)
 
-# Add to PATH environment variable
-echo "export PATH=\$PATH:$downloadPath" >> ~/.bashrc || echo "export PATH=\$PATH:$downloadPath" >> ~/.zshrc  # Add to both bash and zsh profiles if necessary
-source ~/.bashrc || source ~/.zshrc
+# Extract the version and download URL
+VERSION=$(echo "$RELEASE_INFO" | jq -r '.tag_name')
 
-echo "Installation successful! You can now run '$assetName' from anywhere."  # Use the actual asset name in the message
+DOWNLOAD_URL=https://github.com/bryanbill/view/releases/download/$VERSION/view-$PLATFORM
+
+# # Download the latest binary
+echo "Downloading view $VERSION for $PLATFORM..."
+curl -L $DOWNLOAD_URL -o vw
+
+# Make the binary executable
+chmod +x vw
+
+# Move the binary to /usr/local/bin
+sudo mv vw /usr/local/bin/vw
+
+# Confirm installation
+echo "view installed successfully. Version: $VERSION"
+
+# Add view to PATH using bashrc for linux
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    echo "Adding view to PATH..."
+    echo "export PATH=\$PATH:/usr/local/bin" >> ~/.bashrc
+    source ~/.bashrc
+fi
+
+# Add view to PATH using zshrc for macos
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    echo "Adding view to PATH..."
+    echo "export PATH=\$PATH:/usr/local/bin" >> ~/.zshrc
+    source ~/.zshrc
+fi
+
+
+echo "You can now use the 'vw' command."
