@@ -4,11 +4,11 @@ on:
   push:
     branches: ["develop"]
   pull_request:
-    branches: ["master"]
+    branches: ["master", "develop"]
 
 jobs:
   versioning:
-    runs-on: macos-latest-large
+    runs-on: ubuntu-latest
     outputs:
       new_version: ${{ steps.increment_version.outputs.new_version }}
     steps:
@@ -43,17 +43,15 @@ jobs:
           git config user.name ${{ github.actor }}
           git config user.email ${{ github.actor }}@users.noreply.github.com
 
-
           git add VERSION
           git commit -m "Bump version to $NEW_VERSION"
           git config pull.rebase false
           git pull --rebase
-          git push 
           echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT # Set output variable
 
   build:
     needs: versioning
-    runs-on: macos-latest-large
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest, macos-latest-large]
@@ -87,7 +85,7 @@ jobs:
 
   release:
     needs: [versioning, build]
-    runs-on: macos-latest-large
+    runs-on: ubuntu-latest
     strategy: # Add strategy for the release job
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest, macos-latest-large]
