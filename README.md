@@ -6,8 +6,7 @@ View is a Dart web library for building web user interfaces. It is inspired by R
 
 It's highly customizable and can be used with any Dart package that can run on the web.
 
-The project can be compiled to wasm for Chromium based browsers, others use the dart2js compiler. See Issue [Wasm-GC WebAssembly Garbage Collection Proposal](https://bugs.webkit.org/show_bug.cgi?id=247394)
-
+The project can be compiled to wasm for Chromium-based browsers, others use the dart2js compiler.
 ## Installation
 
 1. Using the View CLI:
