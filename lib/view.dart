@@ -4,8 +4,13 @@
 library;
 
 export 'src/core.dart';
-export 'src/view.dart';
+export 'src/external.dart';
 export 'src/style.dart';
 export 'src/window.dart';
+export 'src/interactive.dart';
+export 'src/stack.dart';
+export 'src/async.dart';
+export 'src/basic.dart';
+
 
 // TODO: Export any libraries intended for clients of this package.

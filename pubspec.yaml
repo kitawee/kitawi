@@ -1,6 +1,6 @@
 name: view
 description: View is a Dart web library for building web user interfaces
-version: 0.1.1+dev
+version: 0.3.2
 repository: https://github.com/bryanbill/view
 
 environment:

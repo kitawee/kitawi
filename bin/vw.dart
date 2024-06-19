@@ -1,6 +1,6 @@
 import 'dart:io';
 
-void main(List<String?> args) {
+void main(List<String?> args) async {
   String? command;
   List<String?> rest;
 
@@ -149,8 +149,6 @@ Future<void> runProject() async {
 
 Future<void> buildProject(List<String?> args) async {
   final options = args.where((element) => element!.startsWith('-')).toList();
-
-  print(args);
 
   optionsLoop:
   for (var option in options) {

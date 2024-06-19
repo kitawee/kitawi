@@ -1,9 +1,14 @@
 import 'dart:async';
 
 import 'package:view/components/error_view.dart';
+import 'package:view/src/stack.dart';
 import 'package:view/view.dart';
 import 'package:web/web.dart';
 
+import 'basic.dart';
+
+/// Set this to true to enable debug mode
+/// This will show error messages in the browser and perform view rendering checks
 bool DEBUG = false;
 
 class SearchParams {
@@ -163,7 +168,50 @@ class Router {
     // clear Stack
     Stack.clear();
     window.location.hash = path;
+
+    if (path.contains('?')) {
+      path = path.split('?').first;
+    }
+
+    final currentPath = window.location.hash.substring(1).split('?').first;
+    if (currentPath == path) return;
+
     _pathStreamController.add((path: path, replace: true));
+  }
+
+  static void replace(String path) {
+    // clear Stack
+    Stack.clear();
+    window.location.replace('#$path');
+    _pathStreamController.add((path: path, replace: true));
+  }
+
+  static void back() {
+    // clear Stack
+    Stack.clear();
+    window.history.back();
+  }
+
+  static void forward() {
+    // clear Stack
+    Stack.clear();
+    window.history.forward();
+  }
+
+  static void go(int index) {
+    // clear Stack
+    Stack.clear();
+    window.history.go(index);
+  }
+
+  static void clearStack() {
+    Stack.clear();
+  }
+
+  static void reload() {
+    // clear Stack
+    Stack.clear();
+    window.location.reload();
   }
 
   static final _pathStreamController =

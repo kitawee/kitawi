@@ -2,7 +2,7 @@ import 'package:view/view.dart';
 
 View errorView(Object error, StackTrace? stackTrace) {
   return Reactive(
-    builder: (view, update) {
+    builder: (view) {
       return Div(
         className:
             "w-[200px] h-[200px] shadow-lg flex items-center justify-center bg-gray-100 absolute top-0 left-0 right-0 bottom-0 m-auto z-50",
@@ -19,7 +19,7 @@ View errorView(Object error, StackTrace? stackTrace) {
                     children: [
                       Text("Exception",
                           tag: "h1", className: "text-red-500 font-bold"),
-                      Text("An error occurred: $error"),
+                      Text("$error"),
                       Text("Stack trace: $stackTrace"),
                     ],
                   ),
