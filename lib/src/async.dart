@@ -30,7 +30,7 @@ class Reactive extends View {
 
   Reactive({
     required this.builder,
-    required super.id,
+    super.id,
     super.tag = 'div',
     super.className,
     super.style,
@@ -158,7 +158,7 @@ class Promise<T> extends View {
 /// - [Snapshot]
 class Live<T> extends View {
   /// The view to render after the stream has resolved
-  /// 
+  ///
   /// NOTE: do not call `view.refresh()` in the builder function unless
   /// an interaction has been initiated by the user
   ///

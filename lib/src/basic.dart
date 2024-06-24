@@ -511,15 +511,24 @@ class Dropdown extends View {
   @override
   Element render() {
     final element = super.render() as HTMLSelectElement;
+
+    if (initialValue != null) {
+      element.value = initialValue!;
+    }
+
     for (final item in items) {
+      var itemElement = item.render() as HTMLOptionElement;
+
       if (item.value == initialValue) {
         element.selectedIndex = items.indexOf(item);
+        itemElement.selected = true;
       }
 
-      element.append(item.render());
+      element.append(itemElement);
     }
+
     element.onChange.listen((event) {
-      onChanged!(items[element.selectedIndex].value);
+      onChanged?.call(items[element.selectedIndex].value);
     });
     return element;
   }
