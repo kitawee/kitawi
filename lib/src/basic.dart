@@ -1,5 +1,4 @@
-import 'package:view/src/stack.dart';
-import 'package:view/view.dart';
+import 'package:view/view.dart' as view;
 import 'package:web/web.dart';
 
 class View {
@@ -13,7 +12,7 @@ class View {
   final String? className;
 
   /// The style of the element
-  final Style? style;
+  final view.Style? style;
 
   /// The attributes of the element
   final List<View>? children;
