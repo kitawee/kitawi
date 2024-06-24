@@ -1,3 +1,5 @@
+import 'dart:js_interop_unsafe';
+
 import 'package:view/view.dart';
 
 void main() => Router.run(
@@ -82,7 +84,9 @@ View todoList() {
                       children: [
                         Text(todo),
                         Button(
-                          child: Text("Delete"),
+                          child: Text(
+                            "Delete",
+                          ),
                           className: "p-2 bg-red-500 text-white rounded",
                           onPressed: (p0) {
                             todos.remove(todo);

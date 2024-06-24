@@ -19,6 +19,10 @@ class Dialog {
     String? width = "calc(100% * 0.3)",
     bool persistent = false,
   }) {
+    if (isOpen) {
+      close();
+    }
+
     final dialogDiv = Div(
       onClick: (p0) {
         if (!persistent) close();

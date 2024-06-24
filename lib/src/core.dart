@@ -1,15 +1,9 @@
 import 'dart:async';
 
 import 'package:view/components/error_view.dart';
-import 'package:view/src/stack.dart';
+import 'package:view/view.dart' as vw;
 import 'package:view/view.dart';
 import 'package:web/web.dart';
-
-import 'basic.dart';
-
-/// Set this to true to enable debug mode
-/// This will show error messages in the browser and perform view rendering checks
-bool DEBUG = false;
 
 class SearchParams {
   SearchParams();
@@ -46,14 +40,14 @@ class SearchParams {
 }
 
 class MatchRoute {
-  final View view;
+  final vw.View view;
 
   MatchRoute(this.view);
 }
 
 class Route {
   final String path;
-  final View Function(Map<String, dynamic>) view;
+  final vw.View Function(Map<String, dynamic>) view;
   final Function()? beforeEnter;
   final Function()? afterEnter;
 
@@ -147,7 +141,7 @@ class Router {
       final element = document.querySelector(selector!);
       if (element == null) {
         document.getElementsByTagName('body').item(0)?.replaceChildren(
-              Div(id: selector, children: []).render(),
+              vw.Div(id: selector, children: []).render(),
             );
       }
 
@@ -166,7 +160,7 @@ class Router {
 
   static void push(String path) {
     // clear Stack
-    Stack.clear();
+    vw.Stack.clear();
     window.location.hash = path;
 
     if (path.contains('?')) {
@@ -181,36 +175,36 @@ class Router {
 
   static void replace(String path) {
     // clear Stack
-    Stack.clear();
+    vw.Stack.clear();
     window.location.replace('#$path');
     _pathStreamController.add((path: path, replace: true));
   }
 
   static void back() {
     // clear Stack
-    Stack.clear();
+    vw.Stack.clear();
     window.history.back();
   }
 
   static void forward() {
     // clear Stack
-    Stack.clear();
+    vw.Stack.clear();
     window.history.forward();
   }
 
   static void go(int index) {
     // clear Stack
-    Stack.clear();
+    vw.Stack.clear();
     window.history.go(index);
   }
 
   static void clearStack() {
-    Stack.clear();
+    vw.Stack.clear();
   }
 
   static void reload() {
     // clear Stack
-    Stack.clear();
+    vw.Stack.clear();
     window.location.reload();
   }
 
@@ -219,7 +213,7 @@ class Router {
 }
 
 Future<void> inject(String path, [String? type = "js"]) async {
-  final view = Script(src: path);
+  final view = vw.Script(src: path);
 
   document.head?.append(view.render());
 }
