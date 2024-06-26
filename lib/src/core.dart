@@ -1,4 +1,7 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:js_interop';
+import 'dart:js_interop_unsafe';
 
 import 'package:view/components/error_view.dart';
 import 'package:view/view.dart' as vw;
@@ -130,7 +133,15 @@ class Router {
         return;
       }
 
-      element.append(matchRoute.view.render());
+      final routeElement = matchRoute.view.render();
+
+      element.append(routeElement);
+
+      // get ast of the routeElement
+      final ast = parseAST(routeElement);
+
+      // attach it to window object
+      window.setProperty('view' as JSAny, jsonEncode(ast) as JSAny);
     });
 
     // listen to popstate event
@@ -218,9 +229,45 @@ Future<void> inject(String path, [String? type = "js"]) async {
   document.head?.append(view.render());
 }
 
+// Debug Utils
+
+// Error View
 void showErrorView(String errorString, {StackTrace? stackTrace}) {
   if (!DEBUG) return;
   document.getElementsByTagName('body').item(0)?.append(
         errorView(errorString, stackTrace).render(),
       );
+}
+
+// AST
+Map<String, dynamic> parseAST(Element element) {
+  // create the ast from element
+  Map<String, dynamic> ast = {};
+
+  // get the tag name
+  ast['tag'] = element.tagName.toLowerCase();
+  ast['attributes'] = {};
+
+  // get the attributes
+  for (var index = 0; index < element.attributes.length; index++) {
+    ast['attributes'][element.attributes.item(index)?.name] =
+        element.attributes.item(index)?.value;
+  }
+
+  // remove null attributes
+  (ast['attributes'] as Map)
+      .removeWhere((key, value) => value == null || key == null);
+
+  // get the children
+  ast['children'] = [];
+
+  for (var index = 0; index < element.children.length; index++) {
+    ast['children'].add(parseAST(element.children.item(index)!));
+  }
+
+  ast['innerHTML'] = element.innerHTML;
+
+  ast['computedStyle'] = window.getComputedStyle(element).cssText;
+
+  return ast;
 }

@@ -150,37 +150,3 @@ class Toast {
     return completer.future;
   }
 }
-
-// class DatePicker {
-//   static void show({
-//     required DateTime initialDate,
-//     required void Function(DateTime) onDateSelected,
-//   }) {
-//     final datePicker = Div(
-//       className: "bg-white p-4 rounded-lg",
-//       children: [
-//         Text("Select a date"),
-//         Div(
-//           className: "flex gap-2",
-//           children: [
-//             Button(
-//               child: Text("Cancel"),
-//               onPressed: (v) {
-//                 Dialog.close();
-//               },
-//             ),
-//             Button(
-//               child: Text("Select"),
-//               onPressed: (v) {
-//                 onDateSelected(DateTime.now());
-//                 Dialog.close();
-//               },
-//             ),
-//           ],
-//         ),
-//       ],
-//     );
-
-//     Dialog.show(datePicker);
-//   }
-// }

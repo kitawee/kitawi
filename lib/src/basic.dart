@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:view/src/stack.dart';
 import 'package:view/view.dart' as view;
 import 'package:web/web.dart';
 
@@ -217,7 +220,7 @@ class View {
       onAfterRender!(this);
     }
 
-    // Stack.push(this);
+    Stack.push(this);
 
     return element!;
   }
@@ -234,6 +237,14 @@ class View {
 
   void append(View view) {
     element!.append(view.render());
+  }
+
+  @override
+  String toString() {
+    return """
+  View: $tag 
+  Next: $children
+""";
   }
 }
 
@@ -353,7 +364,7 @@ class Button extends View {
     element.append(child.render());
     if (onPressed != null) {
       element.onClick.listen((event) {
-        onPressed!(event);
+        onPressed?.call(event);
       });
     }
     return element;
