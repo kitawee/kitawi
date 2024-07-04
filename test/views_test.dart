@@ -6,7 +6,7 @@ void main() {
   group('View tests', () {
     test("- view", () {
       final view = View();
-
+ 
       final element = view.render();
       final expected = web.document.createElement("div");
 

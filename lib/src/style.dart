@@ -1,6 +1,20 @@
-class StyleProp {
-  final double? width;
-  final double? height;
+
+extension DimensionExt on num {
+  String get px => '${this}px';
+  String get percent => '$this%';
+  String get vh => '${this}vh';
+  String get vw => '${this}vw';
+  String get em => '${this}em';
+  String get rem => '${this}rem';
+  String get ch => '${this}ch';
+  String get ex => '${this}ex';
+  String get svh => '${this}svh';
+  String get svw => '${this}svw';
+}
+
+class Style {
+  final String? width;
+  final String? height;
   final String? color;
   final String? backgroundColor;
   final String? borderColor;
@@ -10,7 +24,7 @@ class StyleProp {
   final double? margin;
   final String? display;
 
-  const StyleProp({
+  const Style({
     this.width,
     this.height,
     this.color,
@@ -26,10 +40,10 @@ class StyleProp {
   String create() {
     final styles = <String>[];
     if (width != null) {
-      styles.add('width: ${width}px');
+      styles.add('width: $width');
     }
     if (height != null) {
-      styles.add('height: ${height}px');
+      styles.add('height: $height');
     }
     if (color != null) {
       styles.add('color: $color');
@@ -59,3 +73,4 @@ class StyleProp {
     return styles.join(';');
   }
 }
+  

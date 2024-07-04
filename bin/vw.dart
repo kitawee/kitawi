@@ -1,6 +1,7 @@
+import 'dart:convert';
 import 'dart:io';
 
-void main(List<String?> args) {
+void main(List<String?> args) async {
   String? command;
   List<String?> rest;
 
@@ -24,7 +25,7 @@ void main(List<String?> args) {
       runProject();
       break;
     case 'build':
-      buildProject(rest);
+      _build();
       break;
     default:
       printHelp();
@@ -33,8 +34,8 @@ void main(List<String?> args) {
 }
 
 Future<void> newProject(String? projectName) async {
-  while (projectName == null) {
-    print('Enter the project name:');
+  while (projectName == null || projectName.isEmpty) {
+    print('Enter the project name');
     projectName = stdin.readLineSync();
     if (projectName == null || projectName.isEmpty) {
       print('Please enter a valid project name.');
@@ -138,54 +139,40 @@ Future<void> runProject() async {
   // Stop the process when the user presses Enter.
   await stdin.first;
   process.kill();
-
-  // Clear the line after the process is killed.
-  stdout.write('\r');
-  stdout.write(' ' * stdout.terminalColumns);
-
-  // Print a message.
-  print('Server stopped.');
 }
 
-Future<void> buildProject(List<String?> args) async {
-  final options = args.where((element) => element!.startsWith('-')).toList();
+Future<void> _build() async {
+  var config = File('./config.json');
+  List<String> includes = [];
+  String? sourceDir;
+  String? directoryName;
 
-  print(args);
+  if (!await config.exists()) {
+    print("Config file not found. Using default configuration.");
+  } else {
+    var content = await config.readAsString();
+    var configJSON = jsonDecode(content) as Map<String, dynamic>;
+    directoryName ??= configJSON['buildDir'] as String? ?? 'build';
 
-  optionsLoop:
-  for (var option in options) {
-    switch (option) {
-      case '-o':
-        print("Building for production: JS and Wasm files will be generated.");
-
-        String? directoryName;
-        try {
-          directoryName = args[args.indexOf(option) + 1];
-        } catch (e) {
-          throw Exception("Please provide a directory name.");
-        }
-
-        await _build(directoryName!);
-        break;
-      default:
-        break optionsLoop;
-    }
+    includes = List<String>.from(configJSON['include']);
+    sourceDir = configJSON['sourceDir'] as String? ?? 'web';
   }
 
-  _build('build');
-}
-
-Future<void> _build(String directoryName) async {
-  final directory = Directory(directoryName);
+  final directory = Directory(directoryName!);
   if (!await directory.exists()) {
     await directory.create();
   }
+
+  // copy all the files from the include list
+  var cp = await Process.run('cp', ['-r', ...includes, directoryName]);
+  print(cp.stdout);
+  print(cp.stderr);
 
   //wasm
   var result = await Process.run('dart', [
     'compile',
     'wasm',
-    'web/main.dart',
+    '$sourceDir/main.dart',
     '-o',
     '${directory.path}/main.wasm'
   ]);
@@ -194,27 +181,22 @@ Future<void> _build(String directoryName) async {
   print(result.stderr);
 
   //js
-  var jsResult = await Process.run('dart',
-      ['compile', 'js', 'web/main.dart', '-o', '${directory.path}/main.js']);
+  var jsResult = await Process.run('dart', [
+    'compile',
+    'js',
+    '$sourceDir/main.dart',
+    '-o',
+    '${directory.path}/main.js'
+  ]);
 
   print(jsResult.stdout);
   print(jsResult.stderr);
 
-  // copy index.html, main.js, style.css and assets folder to directory
-  await Process.run('cp', [
-    'web/index.html',
-    'web/styles.css',
-    'web/bootstrap.js',
-    '${directory.path}/',
-  ]);
-
-  await Process.run('cp', [
-    '-r',
-    'web/assets',
-    '${directory.path}/',
-  ]);
+  // read config.json
 
   print("Project built successfully.");
+
+  exit(0);
 }
 
 void printHelp() {
