@@ -29,6 +29,7 @@ jobs:
   build:
     needs: versioning
     runs-on: ubuntu-latest
+    if: ${{ needs.versioning.outputs.new_version != github.event.before }}
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest, macos-latest-large]
