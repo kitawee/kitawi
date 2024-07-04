@@ -43,26 +43,26 @@ class SearchParams {
 }
 
 class MatchRoute {
-  final vw.View view;
-
-  MatchRoute(this.view);
+  final vw.Route route;
+  final Map<String, String> params;
+  MatchRoute(this.route, {this.params = const {}});
 }
 
 class Route {
   final String path;
   final vw.View Function(Map<String, dynamic>) view;
-  final Function()? beforeEnter;
-  final Function()? afterEnter;
+  final Function(Map<String, dynamic> params)? beforeRender;
+  final Function(Map<String, dynamic> params, [vw.View? view])? afterRender;
 
   Route({
     required this.path,
     required this.view,
-    this.beforeEnter,
-    this.afterEnter,
+    this.beforeRender,
+    this.afterRender,
   });
 
   MatchRoute? match(String path) {
-    if (this.path == path) return MatchRoute(view({}));
+    if (this.path == path) return MatchRoute(this);
 
     if (this.path.contains(':')) {
       final parts = this.path.split('/');
@@ -80,7 +80,7 @@ class Route {
         }
       }
 
-      return MatchRoute(view(params));
+      return MatchRoute(this, params: params);
     }
 
     return null;
@@ -128,12 +128,18 @@ class Router {
         return;
       }
 
+      if (matchRoute.route.beforeRender != null) {
+        matchRoute.route.beforeRender!(matchRoute.params);
+      }
+
       if (pathSettings.replace) {
-        element.replaceChildren(matchRoute.view.render());
+        element
+            .replaceChildren(matchRoute.route.view(matchRoute.params).render());
         return;
       }
 
-      final routeElement = matchRoute.view.render();
+      final view = matchRoute.route.view(matchRoute.params);
+      final routeElement = view.render();
 
       element.append(routeElement);
 
@@ -142,6 +148,13 @@ class Router {
 
       // attach it to window object
       window.setProperty('view' as JSAny, jsonEncode(ast) as JSAny);
+
+      if (matchRoute.route.afterRender != null) {
+        matchRoute.route.afterRender!(
+          matchRoute.params,
+          view,
+        );
+      }
     });
 
     // listen to popstate event

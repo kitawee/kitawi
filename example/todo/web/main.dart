@@ -10,6 +10,19 @@ void main() => Router.run(
           path: '/',
           view: (p) => todoList(),
         ),
+        Route(
+          path: '/:id',
+          afterRender: (params, [view]) {
+            print(params);
+            print(view?.element);
+            view?.append(Text("Appended text"));
+          },
+          view: (p) => Div(
+            children: [
+              Text("Hello ${p['id']}"),
+            ],
+          ),
+        ),
       ],
     );
 

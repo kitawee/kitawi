@@ -6,7 +6,7 @@ void main() {
   group('View tests', () {
     test("- view", () {
       final view = View();
- 
+
       final element = view.render();
       final expected = web.document.createElement("div");
 
@@ -50,6 +50,44 @@ void main() {
           "<img src=\"https://via.placeholder.com/150\" alt=\"Placeholder\">");
     });
 
-    // TODO: Add more tests
+    test("- textinput", () {
+      web.Event? event;
+      String? value;
+      final input = TextInput(
+        autoFocus: true,
+        name: "name",
+        placeholder: "Name",
+        onChanged: (p0) => value = p0,
+        onSubmitted: (p0) => event = p0,
+      );
+
+      final element = input.render();
+
+      // simulate 'Enter' key press
+      element.dispatchEvent(
+        web.KeyboardEvent(
+          "keydown",
+          web.KeyboardEventInit(key: "Enter"),
+        ),
+      );
+      expect(event, isNotNull);
+    });
+
+    test("- form", () {
+      web.Event? event;
+      final view = Form(
+        children: [
+          TextInput(name: "name", placeholder: "Name"),
+        ],
+        onSubmit: (p0) => event = p0,
+      );
+
+      final element = view.render();
+      expect(element.children.length, 1);
+      expect(element.tagName, "FORM");
+
+      element.dispatchEvent(web.Event("submit"));
+      expect(event, isNotNull);
+    });
   });
 }
