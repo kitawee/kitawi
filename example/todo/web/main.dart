@@ -1,3 +1,5 @@
+import 'dart:js_interop_unsafe';
+
 import 'package:view/view.dart';
 
 void main() => Router.run(
@@ -17,7 +19,7 @@ View todoList() {
   String newTodo = "";
 
   return Reactive(
-    builder: (_, update) {
+    builder: (view) {
       return Div(
         className: "min-h-screen bg-gray-100",
         children: [
@@ -37,14 +39,14 @@ View todoList() {
                 children: [
                   TextInput(
                     value: newTodo,
-                    onChanged: (p0) => newTodo = p0.value!,
+                    onChanged: (p0) => newTodo = p0,
                     placeholder: "Add a new todo",
                     className: "w-1/2 p-2 border border-gray-300 rounded",
                     onSubmitted: (p0) {
                       if (newTodo.isEmpty) return;
                       todos.add(newTodo);
                       newTodo = "";
-                      update();
+                      view.refresh();
                     },
                   ),
                   Button(
@@ -54,7 +56,7 @@ View todoList() {
                       if (newTodo.isEmpty) return;
                       todos.add(newTodo);
                       newTodo = "";
-                      update();
+                      view.refresh();
                     },
                   ),
                 ],
@@ -82,11 +84,13 @@ View todoList() {
                       children: [
                         Text(todo),
                         Button(
-                          child: Text("Delete"),
+                          child: Text(
+                            "Delete",
+                          ),
                           className: "p-2 bg-red-500 text-white rounded",
                           onPressed: (p0) {
                             todos.remove(todo);
-                            update();
+                            view.refresh();
                           },
                         ),
                       ],

@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:js_interop';
+import 'dart:js_interop_unsafe';
 
 import 'package:view/components/error_view.dart';
+import 'package:view/view.dart' as vw;
 import 'package:view/view.dart';
 import 'package:web/web.dart';
-
-bool DEBUG = false;
 
 class SearchParams {
   SearchParams();
@@ -41,14 +43,14 @@ class SearchParams {
 }
 
 class MatchRoute {
-  final View view;
+  final vw.View view;
 
   MatchRoute(this.view);
 }
 
 class Route {
   final String path;
-  final View Function(Map<String, dynamic>) view;
+  final vw.View Function(Map<String, dynamic>) view;
   final Function()? beforeEnter;
   final Function()? afterEnter;
 
@@ -131,7 +133,15 @@ class Router {
         return;
       }
 
-      element.append(matchRoute.view.render());
+      final routeElement = matchRoute.view.render();
+
+      element.append(routeElement);
+
+      // get ast of the routeElement
+      final ast = parseAST(routeElement);
+
+      // attach it to window object
+      window.setProperty('view' as JSAny, jsonEncode(ast) as JSAny);
     });
 
     // listen to popstate event
@@ -142,7 +152,7 @@ class Router {
       final element = document.querySelector(selector!);
       if (element == null) {
         document.getElementsByTagName('body').item(0)?.replaceChildren(
-              Div(id: selector, children: []).render(),
+              vw.Div(id: selector, children: []).render(),
             );
       }
 
@@ -161,9 +171,52 @@ class Router {
 
   static void push(String path) {
     // clear Stack
-    Stack.clear();
+    vw.Stack.clear();
     window.location.hash = path;
+
+    if (path.contains('?')) {
+      path = path.split('?').first;
+    }
+
+    final currentPath = window.location.hash.substring(1).split('?').first;
+    if (currentPath == path) return;
+
     _pathStreamController.add((path: path, replace: true));
+  }
+
+  static void replace(String path) {
+    // clear Stack
+    vw.Stack.clear();
+    window.location.replace('#$path');
+    _pathStreamController.add((path: path, replace: true));
+  }
+
+  static void back() {
+    // clear Stack
+    vw.Stack.clear();
+    window.history.back();
+  }
+
+  static void forward() {
+    // clear Stack
+    vw.Stack.clear();
+    window.history.forward();
+  }
+
+  static void go(int index) {
+    // clear Stack
+    vw.Stack.clear();
+    window.history.go(index);
+  }
+
+  static void clearStack() {
+    vw.Stack.clear();
+  }
+
+  static void reload() {
+    // clear Stack
+    vw.Stack.clear();
+    window.location.reload();
   }
 
   static final _pathStreamController =
@@ -171,14 +224,50 @@ class Router {
 }
 
 Future<void> inject(String path, [String? type = "js"]) async {
-  final view = Script(src: path);
+  final view = vw.Script(src: path);
 
   document.head?.append(view.render());
 }
 
+// Debug Utils
+
+// Error View
 void showErrorView(String errorString, {StackTrace? stackTrace}) {
   if (!DEBUG) return;
   document.getElementsByTagName('body').item(0)?.append(
         errorView(errorString, stackTrace).render(),
       );
+}
+
+// AST
+Map<String, dynamic> parseAST(Element element) {
+  // create the ast from element
+  Map<String, dynamic> ast = {};
+
+  // get the tag name
+  ast['tag'] = element.tagName.toLowerCase();
+  ast['attributes'] = {};
+
+  // get the attributes
+  for (var index = 0; index < element.attributes.length; index++) {
+    ast['attributes'][element.attributes.item(index)?.name] =
+        element.attributes.item(index)?.value;
+  }
+
+  // remove null attributes
+  (ast['attributes'] as Map)
+      .removeWhere((key, value) => value == null || key == null);
+
+  // get the children
+  ast['children'] = [];
+
+  for (var index = 0; index < element.children.length; index++) {
+    ast['children'].add(parseAST(element.children.item(index)!));
+  }
+
+  ast['innerHTML'] = element.innerHTML;
+
+  ast['computedStyle'] = window.getComputedStyle(element).cssText;
+
+  return ast;
 }
