@@ -369,9 +369,20 @@ class Button extends View {
   }
 }
 
+class Input extends View {
+  Input({
+    super.id,
+    super.tag = 'input',
+    super.className,
+    super.style,
+    super.onClick,
+    super.children,
+  });
+}
+
 enum TextInpuType { text, password, email, number, tel, url, date }
 
-class TextInput extends View {
+class TextInput extends Input {
   final String? placeholder;
   final String? value;
   final TextInpuType? type;
@@ -501,6 +512,33 @@ class DropdownItem {
     final element = document.createElement('option');
     element.setAttribute('value', value);
     element.append(child.render());
+    return element;
+  }
+}
+
+enum FormMethod { get, post }
+
+class Form extends View {
+  final FormMethod? method;
+  final String? action;
+
+  Form({
+    required super.children,
+    this.method = FormMethod.get,
+    this.action,
+    super.id,
+    super.tag = 'form',
+    super.className,
+    super.style,
+    super.onSubmit,
+  });
+
+  @override
+  Element render() {
+    final element = super.render() as HTMLFormElement;
+    element.method = method.toString().split('.').last;
+    element.action = action ?? '';
+    
     return element;
   }
 }

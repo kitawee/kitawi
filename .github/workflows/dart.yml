@@ -20,9 +20,7 @@ jobs:
         id: increment_version
         run: |
           # Get version from pubspec.yaml
-          VERSION=$(grep 'version: ' pubspec.yaml | sed 's/version: //')
-          # Increment version
-          NEW_VERSION=$(echo $VERSION | awk -F. '{$NF = $NF + 1;} 1' | sed 's/ /./g')
+          NEW_VERSION=$(grep 'version: ' pubspec.yaml | sed 's/version: //')
           # Set output
           echo "::set-output name=new_version::$NEW_VERSION"
 
