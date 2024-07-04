@@ -1,7 +1,6 @@
 import 'dart:async';
 
-import 'package:view/src/basic.dart';
-import 'package:view/src/style.dart';
+import 'package:view/view.dart';
 import 'package:web/web.dart' as web;
 
 class Dialog {
@@ -28,7 +27,7 @@ class Dialog {
         if (!persistent) close();
       },
       className: className ??
-          "absolute w-full h-full  inset-0 bg-black bg-opacity-50 z-50",
+          "w-full h-full absolute  inset-0 bg-black bg-opacity-50 z-50",
       children: [
         Div(className: "flex justify-center items-center h-full", children: [
           Div(

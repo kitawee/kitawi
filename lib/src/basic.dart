@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:view/src/stack.dart';
 import 'package:view/view.dart' as view;
 import 'package:web/web.dart';
@@ -380,12 +378,14 @@ class TextInput extends View {
   final bool? autoFocus;
   final int? maxLength;
   final bool? disabled;
+  final String? name;
   final void Function(
     String,
   )? onChanged;
   final void Function(Event)? onSubmitted;
 
   TextInput({
+    this.name,
     this.placeholder,
     this.value,
     this.onChanged,
@@ -403,6 +403,7 @@ class TextInput extends View {
   @override
   Element render() {
     final element = super.render() as HTMLInputElement;
+    if (name != null) element.setAttribute('name', name!);
     element.setAttribute('placeholder', placeholder ?? '');
     element.setAttribute('value', value ?? '');
     element.setAttribute('type', type.toString().split('.').last);
@@ -741,4 +742,15 @@ class Icon extends View {
 
     return element;
   }
+}
+
+class I extends View {
+  I({
+    super.id,
+    super.tag = 'i',
+    super.className,
+    super.style,
+    super.onClick,
+    super.children,
+  });
 }
