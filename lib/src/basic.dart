@@ -54,7 +54,7 @@ class View {
 
   View({
     this.id,
-    this.tag,
+    this.tag = 'div',
     this.className,
     this.style,
     this.children,
