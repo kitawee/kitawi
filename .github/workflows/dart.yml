@@ -1,8 +1,6 @@
 name: View release workflow
 
 on:
-  push:
-    branches: ["develop"]
   pull_request:
     branches: ["master"]
 
@@ -26,12 +24,9 @@ jobs:
           # Set output
           echo "::set-output name=new_version::$NEW_VERSION"
 
-          PREVIOUS_VERSION=$(git tag | sort -V | tail -n 1)
-          echo "::set-output name=previous_version::$PREVIOUS_VERSION"
   build:
     needs: versioning
     runs-on: ubuntu-latest
-    if: ${{ needs.versioning.outputs.new_version != needs.versioning.outputs.previous_version }}
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest, macos-latest-large]
@@ -66,7 +61,6 @@ jobs:
   release:
     needs: [versioning, build]
     runs-on: ubuntu-latest
-    if: ${{ needs.versioning.outputs.new_version != github.event.before }}
     strategy: # Add strategy for the release job
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest, macos-latest-large]
