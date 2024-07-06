@@ -1,37 +1,34 @@
-# View - A Dart Web Library
+# Kitawi - A Dart Web Library
 
-![View](https://img.shields.io/badge/View-0.3.1-teal)
-
-View is a Dart web library for building web user interfaces. It is inspired by React and Flutter, and it is designed to be simple, fast, and easy to use.
-
+Kitawi is a Dart web library for building web user interfaces.
 It's highly customizable and can be used with any Dart package that can run on the web.
 
 The project can be compiled to wasm for Chromium-based browsers, others use the dart2js compiler.
 ## Installation
 
-1. Using the View CLI:
+1. Using the kitawi CLI:
 
 ```bash
-dart pub global activate --source git https://github.com/bryanbill/view.git
+dart pub global activate --source git https://github.com/kitawee/kitawi.git
 ```
 
 The run the following command to create a new project:
 
 ```bash
-vw new my_project
+kitawi new my_project
 ```
 
 Get the dependencies:
 
 ```bash
 cd my_project
-vw get
+kitawi get
 ```
 
 Add dependencies:
 
 ```bash
-vw get http
+kitawi get http
 ```
 
 Run the project:
@@ -52,17 +49,17 @@ vw build -o dist
 
 ```yaml
 dependencies:
-  view:
+  kitawi:
     git:
-      url: https://github.com/bryanbill/view.git
+      url: https://github.com/kitawee/kitawi.git
 ```
 
 With this method, you have to handle the build process yourself.
 
 ## Contributing
 
-We welcome contributions to view
+We welcome contributions to kitawi
 
 ## License
 
-view is licensed under the MIT License.
+kitawi is licensed under the MIT License.
