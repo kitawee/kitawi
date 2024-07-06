@@ -1,4 +1,4 @@
-import 'package:view/src/core.dart';
+import 'package:view/utils/error.dart';
 
 import 'basic.dart';
 import 'package:web/web.dart';
@@ -147,9 +147,10 @@ class Video extends View {
     this.controlsList,
   }) {
     if (src == null && sources == null) {
-      showErrorView(
-          "$tag must have either src or valid sources; None currently provided",
-          stackTrace: StackTrace.current);
+      error(
+        "$tag must have either src or valid sources; None currently provided",
+        StackTrace.current,
+      );
       throw Exception('src or sources must be provided');
     }
   }
@@ -265,9 +266,10 @@ class Audio extends View {
     this.controlsList,
   }) {
     if (src == null && sources == null) {
-      showErrorView(
-          "$tag must have either src or valid sources; None currently provided",
-          stackTrace: StackTrace.current);
+      error(
+        "$tag must have either src or valid sources; None currently provided",
+        StackTrace.current,
+      );
       throw Exception('src or sources must be provided');
     }
   }
@@ -397,14 +399,18 @@ class Svg extends View {
     super.onClick,
   }) {
     if (preserveAspectRatio != null && mode == null) {
-      showErrorView("mode is required when preserveAspectRatio is set",
-          stackTrace: StackTrace.current);
+      error(
+        "mode is required when preserveAspectRatio is set",
+        StackTrace.current,
+      );
       throw Exception('mode is required when preserveAspectRatio is set');
     }
 
     if (preserveAspectRatio == null && mode != null) {
-      showErrorView("preserveAspectRatio is required when mode is set",
-          stackTrace: StackTrace.current);
+      error(
+        "preserveAspectRatio is required when mode is set",
+        StackTrace.current,
+      );
       throw Exception('preserveAspectRatio is required when mode is set');
     }
   }

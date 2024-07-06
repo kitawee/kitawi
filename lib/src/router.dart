@@ -5,42 +5,10 @@ import 'dart:js_interop_unsafe';
 
 import 'package:view/components/error_view.dart';
 import 'package:view/view.dart' as vw;
-import 'package:view/view.dart';
+
 import 'package:web/web.dart';
 
-class SearchParams {
-  SearchParams();
-
-  /// The query string part of the URL
-  static String? get(String key) {
-    final value = window.location.hash.split('?').last.split('&').firstWhere(
-          (element) => element.startsWith('$key='),
-          orElse: () => '',
-        );
-    if (value.isNotEmpty) return value.split('=').last;
-    return null;
-  }
-
-  /// All the query string parameters
-  static Map<String, String> get all {
-    final params = window.location.hash.split('?').last.split('&');
-    final map = <String, String>{};
-    for (final param in params) {
-      final key = param.split('=').first;
-      final value = param.split('=').last;
-      map[key] = value;
-    }
-    return map;
-  }
-
-  /// Set a query string parameter
-  static void set(String key, String value) {
-    final params = window.location.hash.split('?');
-    final query = params.length > 1 ? params.last : '';
-    final newQuery = query.isEmpty ? '$key=$value' : '$query&$key=$value';
-    window.location.hash = '#${params.first}?$newQuery';
-  }
-}
+import 'apis.dart';
 
 class MatchRoute {
   final vw.Route route;
@@ -63,6 +31,10 @@ class Route {
 
   MatchRoute? match(String path) {
     if (this.path == path) return MatchRoute(this);
+
+    if (path.contains('?')) {
+      path = path.split('?').first;
+    }
 
     if (this.path.contains(':')) {
       final parts = this.path.split('/');

@@ -32,11 +32,6 @@ class Reactive extends View {
     required this.builder,
     super.id,
     super.tag = 'div',
-    super.className,
-    super.style,
-    super.onClick,
-    super.onAfterRender,
-    super.onBeforeRender,
   });
 
   @override

@@ -1,3 +1,4 @@
+import 'package:view/utils/query.dart';
 import 'package:view/view.dart';
 
 void main() => Router.run(
@@ -14,7 +15,7 @@ void main() => Router.run(
         ),
         Route(
           path: '/search',
-          view: (p) => Text("Search: ${SearchParams.get('q') ?? ''}"),
+          view: (p) => Text("Search: ${Query.get('q')}"),
         ),
       ],
     );

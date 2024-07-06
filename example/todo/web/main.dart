@@ -14,7 +14,7 @@ void main() => Router.run(
           path: '/:id',
           afterRender: (params, [view]) {
             print(params);
-            print(view?.element);
+            print(Query.all);
             view?.append(Text("Appended text"));
           },
           view: (p) => Div(
