@@ -1,7 +1,4 @@
-/// Support for doing something awesome.
-///
-/// More dartdocs go here.
-library view;
+library kitawi;
 
 export 'src/router.dart';
 export 'src/external.dart';

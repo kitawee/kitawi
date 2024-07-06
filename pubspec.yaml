@@ -1,7 +1,7 @@
 name: kitawi
-description: View is a Dart web library for building web user interfaces
+description: kitawi is a Dart web library for building web user interfaces
 version: 0.3.4
-repository: https://github.com/bryanbill/view
+repository: https://github.com/kitawee/kitawi
 
 environment:
   sdk: ^3.4.1
