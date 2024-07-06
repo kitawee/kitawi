@@ -34,15 +34,13 @@ kitawi get http
 Run the project:
 
 ```bash
-vw run
+kitawi run
 ```
 
 Build the project:
 
 ```bash
-vw build
-# or
-vw build -o dist
+kitawi build
 ```
 
 2. As a dependency in your `pubspec.yaml` file:
@@ -54,7 +52,6 @@ dependencies:
       url: https://github.com/kitawee/kitawi.git
 ```
 
-With this method, you have to handle the build process yourself.
 
 ## Contributing
 
