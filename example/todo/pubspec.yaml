@@ -8,7 +8,7 @@ environment:
 
 # Add regular dependencies here.
 dependencies:
-  view: 
+  kitawi: 
     path: ../../
 
 dev_dependencies:

@@ -1,4 +1,4 @@
-import 'package:view/src/basic.dart';
+import 'package:kitawi/src/basic.dart';
 
 class Stack {
   static final List<View> _stack = [];

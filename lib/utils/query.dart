@@ -3,7 +3,7 @@ import 'package:web/web.dart';
 /// Handle query parameters
 ///
 /// ```dart
-/// import 'package:view/view.dart';
+/// import 'package:kitawi/view.dart';
 ///
 /// ...
 /// Query.get('key');

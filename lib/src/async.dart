@@ -1,4 +1,4 @@
-import 'package:view/view.dart';
+import 'package:kitawi/view.dart';
 import 'package:web/web.dart';
 
 /// This class renders a view passing the [Reactive] instance to the builder function

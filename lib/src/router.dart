@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
 
-import 'package:view/components/error_view.dart';
-import 'package:view/view.dart' as vw;
+import 'package:kitawi/components/error_view.dart';
+import 'package:kitawi/view.dart' as vw;
 
 import 'package:web/web.dart';
 

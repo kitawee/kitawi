@@ -24,82 +24,20 @@ jobs:
           # Set output
           echo "::set-output name=new_version::$NEW_VERSION"
 
-  build:
-    needs: versioning
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest, macos-latest-large]
-        dart-version: [stable]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dart-lang/setup-dart@9a04e6d73cca37bd455e0608d7e5092f881fd603
-        with:
-          sdk: ${{ matrix.dart-version }}
-
-      - name: Install dependencies
-        run: dart pub get
-
-      - name: Run tests on Chrome (Dart2Wasm)
-        run: dart test -p chrome --compiler dart2wasm
-
-      - name: Run tests on Chrome (Dart2JS)
-        run: dart test -p chrome --compiler dart2js
-
-      - name: Create build directory
-        run: mkdir build
-
-      - name: Build for ${{ matrix.os }}
-        run: dart compile exe bin/vw.dart -o build/view-${{ matrix.os }}
-
-      - name: Archive Production Artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: view-${{ matrix.os }}
-          path: build/view-${{ matrix.os }}
-
   release:
-    needs: [versioning, build]
+    needs: [versioning]
     runs-on: ubuntu-latest
-    strategy: # Add strategy for the release job
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest, macos-latest-large]
-        include: # Map OS to asset names
-          - os: ubuntu-latest
-            asset_title: Linux
-            asset_name: view-linux
-          - os: windows-latest
-            asset_title: Windows
-            asset_name: view-windows.exe
-          - os: macos-latest
-            asset_title: macOS
-            asset_name: view-macos
-          - os: macos-latest-large
-            asset_title: macOS Apple Silicon
-            asset_name: view-macos-apple-silicon
+    
 
     steps:
-      - name: Download Artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: view-${{ matrix.os }}
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ needs.versioning.outputs.new_version }}-${{ matrix.os }}
-          release_name: Release ${{ needs.versioning.outputs.new_version }} for ${{ matrix.asset_title }}
+          tag_name: ${{ needs.versioning.outputs.new_version }}
+          release_name: Release ${{ needs.versioning.outputs.new_version }}
           body: |
-            A ${{ matrix.os }} executable file is attached.
+            Release ${{ needs.versioning.outputs.new_version }}
 
-      - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./view-${{ matrix.os }}
-          asset_name: ${{ matrix.asset_name}}
-          asset_content_type: application/octet-stream

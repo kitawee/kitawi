@@ -1,4 +1,4 @@
-name: view
+name: kitawi
 description: View is a Dart web library for building web user interfaces
 version: 0.3.4
 repository: https://github.com/bryanbill/view
@@ -6,7 +6,7 @@ repository: https://github.com/bryanbill/view
 environment:
   sdk: ^3.4.1
 executables:
-  vw:
+  kitawi:
 
 dependencies:
   web: 0.5.1

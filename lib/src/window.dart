@@ -1,7 +1,7 @@
 /// Wrapper for the window object.
 library window;
 
-import 'package:view/models/v_file.dart';
+import 'package:kitawi/models/v_file.dart';
 import 'package:web/web.dart';
 
 class LocalStorage {

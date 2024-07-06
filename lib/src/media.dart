@@ -1,4 +1,4 @@
-import 'package:view/utils/error.dart';
+import 'package:kitawi/utils/error.dart';
 
 import 'basic.dart';
 import 'package:web/web.dart';

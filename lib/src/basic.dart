@@ -1,5 +1,5 @@
-import 'package:view/src/stack.dart';
-import 'package:view/view.dart' as view;
+import 'package:kitawi/src/stack.dart';
+import 'package:kitawi/view.dart' as view;
 import 'package:web/web.dart';
 
 class View {
@@ -538,7 +538,7 @@ class Form extends View {
     final element = super.render() as HTMLFormElement;
     element.method = method.toString().split('.').last;
     element.action = action ?? '';
-    
+
     return element;
   }
 }

@@ -1,4 +1,4 @@
-import 'package:view/view.dart';
+import 'package:kitawi/view.dart';
 import 'package:test/test.dart';
 import 'package:web/web.dart' as web;
 

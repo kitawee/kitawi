@@ -1,4 +1,4 @@
-import 'package:view/view.dart';
+import 'package:kitawi/view.dart';
 
 View errorView(Object error, StackTrace? stackTrace) {
   return Reactive(

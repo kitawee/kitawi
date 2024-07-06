@@ -1,4 +1,4 @@
-import 'package:view/src/basic.dart';
+import 'package:kitawi/src/basic.dart';
 import 'package:web/web.dart';
 
 class Script extends View {

@@ -1,5 +1,5 @@
-import 'package:view/utils/query.dart';
-import 'package:view/view.dart';
+import 'package:kitawi/utils/query.dart';
+import 'package:kitawi/view.dart';
 
 void main() => Router.run(
       initialRoute: '/',
