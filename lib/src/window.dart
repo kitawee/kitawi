@@ -1,7 +1,7 @@
 /// Wrapper for the window object.
 library window;
 
-import 'dart:async';
+import 'package:view/models/v_file.dart';
 import 'package:web/web.dart';
 
 class LocalStorage {
@@ -32,33 +32,6 @@ class Alert {
       String message, String defaultValue, void Function(String?) callback) {
     final result = window.prompt(message, defaultValue);
     callback(result);
-  }
-}
-
-class VFile {
-  final String name;
-  final String type;
-  final int size;
-
-  /// Base64 encoding of this file
-  final String data;
-
-  VFile(this.name, this.type, this.size, this.data);
-
-  static Future<VFile> fromFile(File file) async {
-    final reader = FileReader();
-    final completer = Completer<VFile>();
-    reader.onLoadEnd.listen((event) {
-      final result = reader.result as String;
-      if (result.isEmpty || result.split(',').isEmpty) {
-        throw Exception("Not a valid file");
-      }
-
-      final vfile = VFile(file.name, file.type, file.size, result);
-      completer.complete(vfile);
-    });
-    reader.readAsDataURL(file);
-    return completer.future;
   }
 }
 
